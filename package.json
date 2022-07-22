@@ -1,0 +1,40 @@
+{
+  "name": "nodns",
+  "version": "0.1.0",
+  "description": "Node DNS Client",
+  "main": "src/main.ts",
+  "author": "Arslan <rslnkrmt2552@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "prepare": "husky install",
+    "typecheck": "tsc --noEmit --pretty",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint": "eslint \"{src,test}/**/*.ts\"",
+    "lint:fix": "eslint \"{src,test}/**/*.ts\" --fix",
+    "execute": "node -r tsconfig-paths/register -r ts-node/register",
+    "execute:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register",
+    "r": "node dist/main.mjs",
+    "b": "esbuild --format=esm --bundle --outfile=dist/main.mjs --platform=node src/main.ts",
+    "b:w": "esbuild --format=esm --bundle --outfile=dist/main.mjs --platform=node src/main.ts --watch",
+    "br": "yarn b && yarn r"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.30.7",
+    "@typescript-eslint/parser": "^5.30.7",
+    "dotenv-cli": "^6.0.0",
+    "esbuild": "^0.14.49",
+    "eslint": "^8.20.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "nodemon": "^2.0.19",
+    "prettier": "^2.7.1",
+    "runner": "^4.0.0",
+    "ts-loader": "^9.3.1",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.0.0",
+    "typescript": "^4.7.4"
+  }
+}
