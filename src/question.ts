@@ -1,11 +1,13 @@
 import {QueryType} from './QueryType';
 import { Buffer } from 'node:buffer';
+import {QueryBuffer} from './QueryBuffer';
 // import assert from 'node:assert';
 
-class Question{
+export class Question{
 
     url : string
     query_type : number
+    query_class : number =1;
 
     constructor(domain:string,query_type:string){
         this.url = domain;
@@ -15,20 +17,32 @@ class Question{
         this.query_type = QueryType.CNAME;
     }
 
+    
     to_bytes():Buffer{
-        var len=this.url.length+1;
-        const buf = Buffer.alloc(len);
         let parts : string[] =this.url.split(".")
-        var parts_len: number [] =[];
-        var pos=0;
-        for (let i = 0; i < parts.length; i++) {            
+        const buffer = new QueryBuffer();
+        const buf=buffer.create(this.url);
+        let offset : number[]=buffer.getOffsetArray(parts);
+        var byteslen=1;
+        const encoding ='utf-8'
+        var parts_len : number[] =[];
+        for (let i = 0,j=0; i < parts.length; i++,j=j+2) {            
             parts_len[i]=parts[i].length;
-            buf.writeIntBE(parts_len[i],pos,1)
-            buf.write(parts[i],pos+1,'utf8');
-            pos=pos+1+parts_len[i];
+            buf.writeIntBE(parts_len[i],offset[j],byteslen)
+            buf.write(parts[i],offset[j+1],encoding);
         }
-        return buf
+        const buf2=buffer.create(5);
+        buf2.writeInt8(0,0)
+        buf2.writeInt16BE(this.query_type,1);
+        buf2.writeInt16BE(this.query_class,3);
+        var arr = [buf, buf2];
+        var question_buf = Buffer.concat(arr);
+        return question_buf
     }
+
+    
+
     
     
 }
+
